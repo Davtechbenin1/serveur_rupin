@@ -108,7 +108,7 @@ logging.basicConfig(
 	format = "%(levelname)s: %(message)s",
 	level = logging.INFO
 )
-#'''
+'''
 if __name__ == "__main__":
 
 	host = "localhost"
@@ -119,5 +119,6 @@ if __name__ == "__main__":
 	
 	uvicorn.run(app,port = port,host = host,reload = False,
 		log_level = "info")
-	#"""
+	
 #'''
+

@@ -108,16 +108,4 @@ logging.basicConfig(
 	format = "%(levelname)s: %(message)s",
 	level = logging.INFO
 )
-#'''
-if __name__ == "__main__":
 
-	host = "localhost"
-	port = 8010
-	inf_dic = {"host":host,'port':port,"user":"postgres",
-		"pass_word":'davtechbenin',"postgres_host":"localhost",
-		"postgres_port":"5432"}
-	
-	uvicorn.run(app,port = port,host = host,reload = False,
-		log_level = "info")
-	#"""
-#'''

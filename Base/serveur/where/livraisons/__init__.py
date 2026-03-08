@@ -22,8 +22,9 @@ class livraisons:
 		where = await self.set_my_where(ent_name,self.livraison_fic)
 		th_d = self.get_livraison_model_info()
 		th_d.update(dic)
-		data = await self.save_data(where,th_d)
-		if data:
+		_data = await self.save_data(where,th_d)
+		if _data.get('status') == 'ok':
+			data = _data.get('data')
 			cmd_id = data.get('commande')
 			liv_id = data.get('id')
 			person_id = data.get('livreur')
@@ -32,7 +33,7 @@ class livraisons:
 			await self.save_hist_into(ent_name,self.livraison_fic,
 				data.get("N°"),date)
 			await self.set_livraison_id(ent_name,cmd_id,liv_id,person_id)
-		return await self.verif_what_to_send(data, self.livraison_fic)
+		return await self.verif_what_to_send(_data, self.livraison_fic)
 
 	async def modif_livraisons(self,ent_name,dic):
 		return await self.save_livraisons(ent_name,dic)

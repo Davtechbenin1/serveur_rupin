@@ -106,8 +106,10 @@ class local:
 		record_id = self.get_ident_of(record_id)
 		await_dic = await asyncio.to_thread(self.get_data_simple,
 			base_table, record_id)
+		print(await_dic)
 		dic = await_dic.get('data')
-		#print(dic)
+		print(dic)
+		print('----------------\n')
 		return dic
 
 	async def delete_data(self, base_table, date = None, record_id = None):
@@ -131,17 +133,19 @@ class local:
 		#print(success_dic)
 		await self.ws.broadcast_table_update(ent_name,success_dic)
 
-		return data_dic
+		return success_dic
 		
 
 	async def verif_what_to_send(self,data,where):
 		dic = data.get('data')
+		print(f"#################\n{dic}\n###################")
 		if dic:
 			id = dic.get('id')
 			dic['N°'] = self.set_ident_of(where,id)
 			return self.success_response(dic,where,"save")
 		else:
-			return self.failed_response(dic,where,"save","Erreur au niveau du serveur! Critique")
+			raise Exception("Erreur inconus")
+			#return self.failed_response(dic,where,"save","Erreur au niveau du serveur! Critique")
 
 	def set_ident_of(self,part,ident):
 		if part.lower() == 'rupin':

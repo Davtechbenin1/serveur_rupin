@@ -32,11 +32,17 @@ class users:
 		th_d = self.get_user_model_info()
 		th_d.update(dic)
 		data = await self.save_data(where,th_d)
-		if data:
-			await self.save_id_into(ent_name,self.user_fic,data.get('id'))
+		if data.get('status') == "ok":
+			await self.save_id_into(ent_name,self.user_fic,
+				data.get('data',dict()).get('id'))
+			th_ = {
+				"data":data
+			}
+		#print(f"-----------------\n{data}\n------------------")
 		return await self.verif_what_to_send(data, self.user_fic)
 
 	async def modif_users(self,ent_name,dic):
+		#print(ent_name,dic)
 		return await self.save_users(ent_name,dic)
 		
 	async def get_users(self,ent_name,ident):
@@ -60,6 +66,7 @@ class users:
 				user["commandes"][cmd_id] = cmd_mont
 				await self.modif_users(ent_name,user)
 		else:
+			print(ent_name,user_id,men_id,prix)
 			print(_user)
 
 	async def save_menu_to_prest(self,ent_name,user_id,men_id,prix):
@@ -71,6 +78,7 @@ class users:
 				user["menus"][men_id] = prix
 				await self.modif_users(ent_name,user)
 		else:
+			print(ent_name,user_id,men_id,prix)
 			print(_user)
 
 # Message handler

@@ -44,13 +44,13 @@ bucket = S3.Bucket(B2_BUCKET_NAME)
 # -----------------------
 @app.post("/api/upload")
 async def upload_file(file:UploadFile = File(...)):
-	#try:
-	content = await file.read()
-	bucket.put_object(Key=file.filename, Body = content,
-		ContentType=file.content_type)
-	return {"filename":file.filename, "message":"Upload réussi"}
-#	except botocore.exceptions.EndpointConnectionError:
-#		return {"filename":"", "message":"Upload échoué"}
+	try:
+		content = await file.read()
+		bucket.put_object(Key=file.filename, Body = content,
+			ContentType=file.content_type)
+		return {"filename":file.filename, "message":"OK"}
+	except botocore.exceptions.EndpointConnectionError:
+		return {"filename":"media/logo.png", "message":"ERROR"}
 
 # -----------------------
 # ROUTE DOWNLOAD
@@ -108,4 +108,16 @@ logging.basicConfig(
 	format = "%(levelname)s: %(message)s",
 	level = logging.INFO
 )
+#'''
+if __name__ == "__main__":
 
+	host = "localhost"
+	port = 8010
+	inf_dic = {"host":host,'port':port,"user":"postgres",
+		"pass_word":'davtechbenin',"postgres_host":"localhost",
+		"postgres_port":"5432"}
+	
+	uvicorn.run(app,port = port,host = host,reload = False,
+		log_level = "info")
+	#"""
+#'''

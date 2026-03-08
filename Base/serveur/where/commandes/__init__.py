@@ -16,7 +16,7 @@ class commandes:
 			"date":self.get_today(),
 			"heure":self.get_hour(),
 			'montant':float(),
-			"status":'en traitement',
+			"status":'en attente',
 			"status paye":'non payée',
 		}
 
@@ -24,8 +24,9 @@ class commandes:
 		where = await self.set_my_where(ent_name,self.commande_fic)
 		th_d = self.get_commande_model_info()
 		th_d.update(dic)
-		data = await self.save_data(where,th_d)
-		if data:
+		_data = await self.save_data(where,th_d)
+		if _data.get('status') == 'ok':
+			data = _data.get('data')
 			client = data.get('client')
 			prest = data.get('prestataire')
 			cmd_id = data.get('N°')
@@ -47,7 +48,7 @@ class commandes:
 			if liv_id:
 				await self.save_cmd_of_this(ent_name,liv_id,cmd_id,mont)
 
-		return await self.verif_what_to_send(data, self.commande_fic)
+		return await self.verif_what_to_send(_data, self.commande_fic)
 
 	async def modif_commandes(self,ent_name,dic):
 		return await self.save_commandes(ent_name,dic)
@@ -67,9 +68,9 @@ class commandes:
 		cmd_dic = await self.get_commandes(ent_name,cmd_id)
 		if cmd_dic.get('status') == "ok":
 			cmd_dic = cmd_dic.get('data')
-		cmd_dic['livreur'] = person_id
-		cmd_dic['livraison'] = liv_id
-		await self.modif_commandes(ent_name,cmd_dic)
+			cmd_dic['livreur'] = person_id
+			cmd_dic['livraison'] = liv_id
+			await self.modif_commandes(ent_name,cmd_dic)
 
 
 # Message handler

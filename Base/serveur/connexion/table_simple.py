@@ -78,7 +78,9 @@ def get_data_simple(self, base_table, record_id: int = None):
 			result[th_rid] = data_copy
 
 		if record_id:
-			result = result.get(record_id)
+			where = self.get_my_where(base_table)
+			th_rid = self.set_ident_of(where,record_id)
+			result = result.get(th_rid)
 
 		cur.close()
 		return self.success_response(result, base_table, "get")

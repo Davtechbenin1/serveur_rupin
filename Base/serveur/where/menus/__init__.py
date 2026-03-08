@@ -21,8 +21,9 @@ class menus:
 		where = await self.set_my_where(ent_name,self.menu_fic)
 		th_d = self.get_menu_model_info()
 		th_d.update(dic)
-		data = await self.save_data(where,th_d)
-		if data:
+		_data = await self.save_data(where,th_d)
+		if _data.get('status') == 'ok':
+			data = _data.get('data')
 			m_id = data.get('N°')
 			cat_id = data.get('catégorie')
 			prix = data.get('prix')
@@ -30,7 +31,7 @@ class menus:
 			await self.save_menu_to_prest(ent_name, us_id, m_id, prix)
 			await self.save_menu_of(ent_name, cat_id, m_id, prix)
 			await self.save_id_into(ent_name,self.menu_fic,data.get("id"))
-		return await self.verif_what_to_send(data, self.menu_fic)
+		return await self.verif_what_to_send(_data, self.menu_fic)
 
 	async def modif_menus(self,ent_name,dic):
 		return await self.save_menus(ent_name,dic)

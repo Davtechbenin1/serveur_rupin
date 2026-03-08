@@ -13,7 +13,7 @@ class general:
 
 	async def get_general(self,ent_name):
 		where = await self.set_my_where(ent_name,self.general_fic)
-		_general_dic = await self.get_data(where)
+		_general_dic = await self.get_data(where,record_id = 1)
 		th_general = _general_dic.get('data')
 		return th_general.get(1,dict())
 

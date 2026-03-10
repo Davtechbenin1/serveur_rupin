@@ -6,3 +6,4 @@ python-dotenv
 pydantic
 boto3
 uvicorn[standart]
+python-multipart

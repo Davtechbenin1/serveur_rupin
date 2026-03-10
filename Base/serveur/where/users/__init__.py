@@ -15,13 +15,16 @@ class users:
 			"img":"media/logo.png",
 			"solde":str(),
 			"adresse":str(),
+			"last adresse":str(),
 			'téléphone':str(),
 			'commandes':dict(),
-			'payements':dict(),
+			"livraisons":dict(),
+			'paiements':dict(),
 			"note":list(),
 			"date d'ajout":self.get_today(),
 			"état":"actif",
 			"menus":dict(),
+			"articles":dict(),
 			'solde':float(),
 		}
 
@@ -57,14 +60,56 @@ class users:
 
 
 # Gestion divers
-	async def save_cmd_of_this(self,ent_name,user_id,cmd_id,cmd_mont):
+	async def save_cmd_of_this(self,ent_name,user_id,cmd_id,cmd_mont,
+			status,presta = False):
 		_user = await self.get_users(ent_name,user_id)
 		if _user.get('status') == 'ok':
 			user = _user.get('data')
+			if status == "livrée":
+				if presta:
+					user["solde"]+=float(cmd_mont)
+				else:
+					user["solde"]-=float(cmd_mont)
 			old_mont = user['commandes'].get(cmd_id,int())
 			if old_mont != cmd_mont:
 				user["commandes"][cmd_id] = cmd_mont
 				await self.modif_users(ent_name,user)
+		else:
+			print(ent_name,user_id,men_id,prix)
+			print(_user)
+		
+	async def save_livraison_of_this(self,ent_name,user_id,cmd_id,cmd_mont):
+		_user = await self.get_users(ent_name,user_id)
+		if _user.get('status') == 'ok':
+			user = _user.get('data')
+			user["solde"]-=float(cmd_mont)
+			old_mont = user['livraisons'].get(cmd_id,int())
+			if old_mont != cmd_mont:
+				user["livraisons"][cmd_id] = cmd_mont
+				await self.modif_users(ent_name,user)
+		else:
+			print(ent_name,user_id,men_id,prix)
+			print(_user)
+
+	async def save_recette_of_this(self,ent_name,user_id,cmd_id,cmd_mont):
+		_user = await self.get_users(ent_name,user_id)
+		if _user.get('status') == 'ok':
+			user = _user.get('data')
+			user["solde"]+=float(cmd_mont)
+			old_mont = user['paiements'].get(cmd_id,int())
+			if old_mont != cmd_mont:
+				user["paiements"][cmd_id] = cmd_mont
+				await self.modif_users(ent_name,user)
+		else:
+			print(ent_name,user_id,men_id,prix)
+			print(_user)
+
+	async def save_depense_of_this(self,ent_name,user_id,cmd_mont):
+		_user = await self.get_users(ent_name,user_id)
+		if _user.get('status') == 'ok':
+			user = _user.get('data')
+			user["solde"]+=float(cmd_mont)
+			await self.modif_users(ent_name,user)
 		else:
 			print(ent_name,user_id,men_id,prix)
 			print(_user)
@@ -76,6 +121,18 @@ class users:
 			old_mont = user['menus'].get(men_id,int())
 			if old_mont != prix:
 				user["menus"][men_id] = prix
+				await self.modif_users(ent_name,user)
+		else:
+			print(ent_name,user_id,men_id,prix)
+			print(_user)
+
+	async def save_article_to_prest(self,ent_name,user_id,men_id,prix):
+		_user = await self.get_users(ent_name,user_id)
+		if _user.get('status') == 'ok':
+			user = _user.get('data')
+			old_mont = user['articles'].get(men_id,int())
+			if old_mont != prix:
+				user["articles"][men_id] = prix
 				await self.modif_users(ent_name,user)
 		else:
 			print(ent_name,user_id,men_id,prix)

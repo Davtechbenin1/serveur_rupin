@@ -17,7 +17,6 @@ import psycopg2
 import traceback
 
 import sys
-
 #DATABASE_URL = "postgresql://postgres:davtechbenin@localhost:8432/postgres"
 DATABASE_URL = "postgresql://postgres:OjAXnBDSJNNzqnrCMgJbLvmQHFkhUwac@caboose.proxy.rlwy.net:23351/railway"
 

@@ -11,6 +11,7 @@ class commandes:
 			'client':str(),
 			'prestataire':str(),
 			'livreur':str(),
+			"montant livraison":str(),
 			'livraison':str(),
 			'menus':dict(),
 			"date":self.get_today(),
@@ -18,6 +19,9 @@ class commandes:
 			'montant':float(),
 			"status":'en attente',
 			"status paye":'non payée',
+			"opérateur": str(),
+			"déjà payée":False,
+			"déjà livrée":False,
 		}
 
 	async def save_commandes(self,ent_name,dic):
@@ -36,8 +40,10 @@ class commandes:
 			await self.save_hist_into(ent_name,self.commande_fic,
 				data.get("N°"),date)
 			
-			await self.save_cmd_of_this(ent_name,client,cmd_id,mont)
-			await self.save_cmd_of_this(ent_name,prest,cmd_id,mont)
+			await self.save_cmd_of_this(ent_name,client,cmd_id,mont,
+				data.get('status'.lower()),presta = False)
+			await self.save_cmd_of_this(ent_name,prest,cmd_id,mont,
+				data.get('status'.lower()),presta = True)
 
 			all_menu = data.get('menus')
 			for m_id in all_menu:
@@ -46,7 +52,31 @@ class commandes:
 				await self.save_cmd_of(ent_name,m_id,cmd_id,qte)
 
 			if liv_id:
-				await self.save_cmd_of_this(ent_name,liv_id,cmd_id,mont)
+				mont_liv = dic.get('montant livraison')
+				await self.save_livraison_of_this(ent_name,liv_id,cmd_id,mont_liv)
+
+			# Gestion des paiements
+			if not dic.get('déjà payée') and dic.get('status paye',str()).lower() == "payée":
+				dic['déjà payée'] = True
+				mont_cmd = dic.get('montant')
+				mont_liv = dic.get('montant livraison',float())
+				mont = mont_cmd
+				if dic.get('status').lower() == "livrée":
+					if not dic.get('déjà livrée'):
+						mont += mont_liv
+						dic['déjà livrée'] = True
+
+				paie_dic = {
+					"client":dic.get('client'),
+					"référence":dic.get('N°'),
+					"opérateur":dic.get('opérateur'),
+					"motif":"Règlement de facture",
+					"montant":mont,
+					"cmd montant":mont_cmd,
+					"liv montant":mont_liv,
+				}
+				await self.save_recettes(ent_name,paie_dic)
+				await self.save_data(where,dic)
 
 		return await self.verif_what_to_send(_data, self.commande_fic)
 

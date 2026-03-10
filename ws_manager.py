@@ -7,8 +7,9 @@ from lib.serveur.DAV_BASE.MyData import date_obj
 # =========================
 # DATABASE (Railway)
 # =========================
-DATABASE_URL = "postgresql://postgres:OjAXnBDSJNNzqnrCMgJbLvmQHFkhUwac@caboose.proxy.rlwy.net:23351/railway"
+
 #DATABASE_URL = "postgresql://postgres:davtechbenin@localhost:8432/postgres"
+DATABASE_URL = "postgresql://postgres:OjAXnBDSJNNzqnrCMgJbLvmQHFkhUwac@caboose.proxy.rlwy.net:23351/railway"
 
 # =========================
 # UTILS
@@ -47,7 +48,7 @@ class ConnectionManager:
 			minconn=1,
 			maxconn=5,
 			dsn=DATABASE_URL,
-			#sslmode="require"
+			sslmode="require"
 		)
 		self.created_tables = set()
 

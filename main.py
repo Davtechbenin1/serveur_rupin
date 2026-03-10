@@ -18,7 +18,6 @@ from fastapi import WebSocket, WebSocketDisconnect
 import boto3
 from botocore.client import Config
 import botocore
-
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size = 500)
 
@@ -86,7 +85,6 @@ async def get_direct_data(ent_name:str,request:Request):
 		base_table = await ws_manager.th_base_hand.set_my_where(
 			ent_name,where)
 	dic = await ws_manager.th_base_hand.get_data(base_table, date, id)
-	print(dic)
 	return dic
 
 # Gestion du web socket
@@ -96,7 +94,6 @@ async def websocket_endpoint(websocket: WebSocket):
 	try:
 		while True:
 			raw = await websocket.receive_text()
-			#print(raw)
 			result = await ws_manager.handle_message(
 				websocket,raw)
 	except WebSocketDisconnect:

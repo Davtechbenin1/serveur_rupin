@@ -9,7 +9,8 @@ class categories:
 	def get_categorie_model_info(self):
 		return {
 			"nom":str(),
-			"menus":dict()
+			"menus":dict(),
+			"articles":dict(),
 		}
 
 	async def save_categories(self,ent_name,dic):
@@ -46,6 +47,18 @@ class categories:
 				cmds[menu_id] = mont
 				th_categorie['menus'] = cmds
 				await self.modif_categories(ent_name,th_categorie)
+
+	async def save_article_of(self,ent_name,categorie_id,article_id,mont):
+		th_categorie = await self.get_categories(ent_name,categorie_id)
+		if th_categorie.get('status') == "ok":
+			th_categorie = th_categorie.get('data')
+			cmds = th_categorie.get('articles',dict())
+			th_qte = cmds.get(article_id,int())
+			if th_qte != mont:
+				cmds[article_id] = mont
+				th_categorie['articles'] = cmds
+				await self.modif_categories(ent_name,th_categorie)
+
 
 # Message handler
 	async def categorie_message_handler(self,msg):

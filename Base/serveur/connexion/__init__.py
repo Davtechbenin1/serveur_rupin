@@ -20,7 +20,6 @@ class local:
 		get_data_simple,save_data_simple,
 		delete_data_simple)
 
-#print
 	def __init__(self):
 		self.general_fic = "general"
 		self.user_fic = "users"
@@ -28,6 +27,11 @@ class local:
 		self.categorie_fic = 'categories'
 		self.commande_fic = 'commandes'
 		self.livraison_fic = 'livraisons'
+		self.article_fic = "articles"
+		self.commission_fic = "commissions"
+		self.recette_fic = "recettes"
+		self.finance_fic = 'finances'
+		self.depense_fic = 'depenses'
 
 		self.statique_ident = 1
 
@@ -37,6 +41,8 @@ class local:
 			self.categorie_fic : self.categorie_message_handler,
 			self.commande_fic : self.commande_message_handler,
 			self.livraison_fic : self.livraison_message_handler,
+			self.article_fic : self.article_message_handler,
+			self.commission_fic: self.commission_message_handler
 
 		}
 
@@ -95,7 +101,7 @@ class local:
 					dic = await self.__get_data(tab,date,record_id)
 					all_dic[tab] = dic
 			elif isinstance(base_table, str):
-				#print(base_table,record_id)
+				##print(base_table,record_id)
 				all_dic = await self.__get_data(base_table,date,record_id)
 			return self.success_response(all_dic,base_table,'get')
 		except:
@@ -106,10 +112,10 @@ class local:
 		record_id = self.get_ident_of(record_id)
 		await_dic = await asyncio.to_thread(self.get_data_simple,
 			base_table, record_id)
-		print(await_dic)
+		#print(await_dic)
 		dic = await_dic.get('data')
-		print(dic)
-		print('----------------\n')
+		#print(dic)
+		#print('----------------\n')
 		return dic
 
 	async def delete_data(self, base_table, date = None, record_id = None):
@@ -138,7 +144,7 @@ class local:
 
 	async def verif_what_to_send(self,data,where):
 		dic = data.get('data')
-		print(f"#################\n{dic}\n###################")
+		#print(f"#################\n{dic}\n###################")
 		if dic:
 			id = dic.get('id')
 			dic['N°'] = self.set_ident_of(where,id)
@@ -163,7 +169,7 @@ class local:
 			if 'N°' in ident:
 				id = ident.split('N°')[1]
 			else:
-				print(ident)
+				#print(ident)
 				id = ident
 			ident = int(id)
 		return ident

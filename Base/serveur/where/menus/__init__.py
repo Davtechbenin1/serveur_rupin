@@ -12,6 +12,7 @@ class menus:
 			'catégorie':str(),
 			'prestataire':str(),
 			'prix':float(),
+			"date":self.sc.get_today(),
 			"status":"en traitement",#disponible #indisponible
 			"temps de cuisson":str(),
 			'commandes':dict(),

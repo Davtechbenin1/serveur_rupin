@@ -5,7 +5,8 @@ sqlalchemy
 python-dotenv
 pydantic
 boto3
-uvicorn[standart]
+uvicorn[standard]
 python-multipart
 websocket
+
 

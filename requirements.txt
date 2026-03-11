@@ -7,3 +7,5 @@ pydantic
 boto3
 uvicorn[standart]
 python-multipart
+websocket
+
